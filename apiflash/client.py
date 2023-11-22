@@ -31,8 +31,9 @@ class ApiFlashClient(APIClient):
 
     image_format = ImageFormat.PNG
     response_type = ResponseType.JSON
+    fail_on_status = '400-599'
 
-    def __init__(self, access_key, *, image_format=None, response_type=None):
+    def __init__(self, access_key, *, image_format=None, response_type=None, fail_on_status=None):
         super().__init__(
             authentication_method=QueryParameterAuthentication(
                 'access_key',
@@ -45,6 +46,8 @@ class ApiFlashClient(APIClient):
             self.image_format = image_format
         if response_type is not None:
             self.response_type = response_type
+        if fail_on_status is not None:
+            self.fail_on_status = fail_on_status
 
     def _autoswitch_handler(self, response_type):
         self.set_response_handler(
@@ -58,6 +61,8 @@ class ApiFlashClient(APIClient):
             kwargs['response_type'] = self.response_type
         if 'format' not in kwargs:
             kwargs['format'] = self.image_format
+        if 'fail_on_status' not in kwargs:
+            kwargs['fail_on_status'] = self.fail_on_status
 
         self._autoswitch_handler(kwargs['response_type'])
         resp = self.get(Endpoint.screenshot, kwargs)
