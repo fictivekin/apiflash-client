@@ -62,7 +62,7 @@ All available capture options can be found here_.
 Command line usage
 ------------------
 
-Once installed in your virtual environment, you can use the command line interface. You will need to pass `--access-key <your-access-key>` or set `APIFLASH_ACCESS_KEY` in your environment for the command line to authenticate with apiflash.com::
+Once installed in your virtual environment, you can use the command line interface. You will need to pass ``--access-key <your-access-key>`` or set ``APIFLASH_ACCESS_KEY`` in your environment for the command line to authenticate with apiflash.com::
 
     $ apiflash quota
     {'limit': 100, 'remaining': 91, 'reset': 1703265314}
@@ -73,7 +73,7 @@ Once installed in your virtual environment, you can use the command line interfa
     $ apiflash capture https://google.com -o width 400 -o height 600
     https://api.apiflash.com/v1/urltoimage/cache/5asdf65asd.png?access_key=<your-access-key>
 
-If you are using ngrok_ to expose a local development environment, you will need to pass `-o headers ngrok-skip-browser-warning=yes` to the command line utility. The same can be passed as a keyword argument to the `capture()` method, if retrieving the screenshot programmatically.
+If you are using ngrok_ to expose a local development environment, you will need to pass ``-o headers ngrok-skip-browser-warning=yes`` to the command line utility. The same can be passed as a keyword argument to the ``capture()`` method, if retrieving the screenshot programmatically.
 
 
 .. _apiflash: https://apiflash.com
