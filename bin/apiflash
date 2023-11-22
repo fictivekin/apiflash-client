@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import os
-
 from apiflash import ApiFlashClient
 import click
 
@@ -14,11 +12,8 @@ def cli():
 
 def _client(access_key):
     if not access_key:
-        access_key = os.environ.get('APIFLASH_ACCESS_KEY')
-
-        if not access_key:
-            click.echo('ERROR: APIFLASH_ACCESS_KEY cannot be empty!')
-            raise click.Abort()
+        click.echo('ERROR: APIFLASH_ACCESS_KEY cannot be empty!')
+        raise click.Abort()
 
     return ApiFlashClient(access_key)
 
@@ -28,7 +23,7 @@ def _client(access_key):
     '-a',
     '--access-key',
     type=str,
-    default=None,
+    envvar='APIFLASH_ACCESS_KEY',
     help='The ApiFlash access key to use for the request (defaults to environment value of APIFLASH_ACCESS_KEY)',
 )
 def quota(access_key):
@@ -44,17 +39,26 @@ def quota(access_key):
     '-a',
     '--access-key',
     type=str,
-    default=None,
+    envvar='APIFLASH_ACCESS_KEY',
     help='The ApiFlash access key to use for the request (defaults to environment value of APIFLASH_ACCESS_KEY)',
 )
-def capture(url, access_key):
+@click.option(
+    '-o',
+    '--option',
+    type=(str, str),
+    multiple=True,
+    help='Any custom options to pass to the screenshot capture method',
+)
+def capture(url, access_key, option):
     """Make a screenshot of the provided URL"""
 
     if not url:
         click.echo('ERROR: URL cannot be empty!')
         raise click.Abort()
 
-    resp = _client(access_key).capture(url)
+    option = dict(option) if option else {}
+
+    resp = _client(access_key).capture(url, **option)
     click.echo(resp['url'])
 
 
@@ -65,17 +69,26 @@ def capture(url, access_key):
     '-a',
     '--access-key',
     type=str,
-    default=None,
+    envvar='APIFLASH_ACCESS_KEY',
     help='The ApiFlash access key to use for the request (defaults to environment value of APIFLASH_ACCESS_KEY)',
 )
-def save_capture(url, output, access_key):
+@click.option(
+    '-o',
+    '--option',
+    type=(str, str),
+    multiple=True,
+    help='Any custom options to pass to the screenshot capture method',
+)
+def save_capture(url, output, access_key, option):
     """Save the screenshot of the provided URL to a local file"""
 
     if not url:
         click.echo('ERROR: URL cannot be empty!')
         raise click.Abort()
 
-    resp = _client(access_key).capture(url, response_type='image')
+    option = dict(option) if option else {}
+
+    resp = _client(access_key).capture(url, response_type='image', **option)
     output.write(resp)
 
 
