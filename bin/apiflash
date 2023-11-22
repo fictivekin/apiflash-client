@@ -24,6 +24,21 @@ def _client(access_key):
 
 
 @cli.command
+@click.option(
+    '-a',
+    '--access-key',
+    type=str,
+    default=None,
+    help='The ApiFlash access key to use for the request (defaults to environment value of APIFLASH_ACCESS_KEY)',
+)
+def quota(access_key):
+    """Get quota information"""
+
+    resp = _client(access_key).quota()
+    click.echo(resp)
+
+
+@cli.command
 @click.argument('url', type=str)
 @click.option(
     '-a',

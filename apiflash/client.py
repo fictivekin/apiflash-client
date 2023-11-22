@@ -12,6 +12,7 @@ from apiclient import (
 @endpoint(base_url="https://api.apiflash.com")
 class Endpoint:
     screenshot = "v1/urltoimage"
+    quota = "v1/urltoimage/quota"
 
 
 class ImageFormat:
@@ -44,28 +45,24 @@ class ApiFlashClient(APIClient):
             self.image_format = image_format
         if response_type is not None:
             self.response_type = response_type
-            if response_type == ResponseType.IMAGE:
-                self.set_response_handler(RequestsResponseHandler)
+
+    def _autoswitch_handler(self, response_type):
+        self.set_response_handler(
+            RequestsResponseHandler if response_type == ResponseType.IMAGE else JsonResponseHandler
+        )
 
     def capture(self, url, **kwargs):
         kwargs['url'] = url
 
         if 'response_type' not in kwargs:
             kwargs['response_type'] = self.response_type
-        elif kwargs['response_type'] != self.response_type:
-            # This is a one-off request, switch it up
-            self.set_response_handler(
-                RequestsResponseHandler if kwargs['response_type'] == ResponseType.IMAGE else JsonResponseHandler
-            )
         if 'format' not in kwargs:
             kwargs['format'] = self.image_format
 
+        self._autoswitch_handler(kwargs['response_type'])
         resp = self.get(Endpoint.screenshot, kwargs)
-
-        if kwargs['response_type'] != self.response_type:
-            # This was a one-off request, switch it back
-            self.set_response_handler(
-                RequestsResponseHandler if self.response_type == ResponseType.IMAGE else JsonResponseHandler
-            )
-
         return resp.content if kwargs['response_type'] == ResponseType.IMAGE else resp
+
+    def quota(self):
+        self._autoswitch_handler(ResponseType.JSON)
+        return self.get(Endpoint.quota)
