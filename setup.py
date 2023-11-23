@@ -8,8 +8,8 @@ def readme():
         return f.read()
 
 name = 'apiflash-client'
-description = 'ApiFlash Client'
-version = '0.1'
+description = 'ApiFlash.com Client'
+version = '0.2'
 author = 'Fictive Kin LLC'
 email = 'hello@fictivekin.com'
 classifiers = [

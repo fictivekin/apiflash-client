@@ -4,6 +4,13 @@ ApiFlash.com Client
 
 The ApiFlash Client is a Python module for interacting with apiflash_. It requires Python 3.7+.
 
+Installation
+------------
+
+In a Python virtual environment::
+
+    $ pip install apiflash-client
+
 
 Example usage
 -------------
